@@ -94,7 +94,7 @@ export class FileStorage {
 
 
         // Notizen aus dem Body extrahieren (nach dem Frontmatter)
-        let notizen = data.notizen || "";
+        let notizen = taskData.notizen || "";
         const bodyContent = content.substring(match[0].length).trim();
         if (bodyContent) {
             // Entferne "## Notizen" Header falls vorhanden
@@ -104,56 +104,59 @@ export class FileStorage {
             }
         }
 
-        const prioritaet = priorityFromString(data.prioritaet || "Normal");
+        const prioritaet = priorityFromString(taskData.prioritaet || "Normal");
 
         const task: TaskModel = {
-            aufgabe: data.aufgabe || "",
-            bezeichnung: data.bezeichnung || "",
+            aufgabe: taskData.aufgabe || "",
+            bezeichnung: taskData.bezeichnung || "",
             prioritaet: prioritaet,
             prioritaet_nr: priorityToNumber(prioritaet),
-            status: statusFromString(data.status || "Offen"),
-            anfangsdatum: parseDate(data.anfangsdatum) || new Date(),
-            faelligkeitsdatum: parseDate(data.faelligkeitsdatum),
-            abschlussdatum: parseDate(data.abschlussdatum),
-            prozent: typeof data.prozent === "number" ? data.prozent : 0,
-            erledigt: data.erledigt === true || data.prozent === 100,
-            tags: Array.isArray(data.tags) ? data.tags : [],
-            link: data.link || "",
-            bilder: Array.isArray(data.bilder) ? data.bilder : [],
-            wiederkehrend: this.parseRecurrence(data.wiederkehrend),
-            erinnerung: this.parseReminder(data.erinnerung),
+            status: statusFromString(taskData.status || "Offen"),
+            anfangsdatum: parseDate(taskData.anfangsdatum) || new Date(),
+            faelligkeitsdatum: parseDate(taskData.faelligkeitsdatum),
+            abschlussdatum: parseDate(taskData.abschlussdatum),
+            prozent: typeof taskData.prozent === "number" ? taskData.prozent : 0,
+            erledigt: taskData.erledigt === true || taskData.prozent === 100,
+            tags: Array.isArray(taskData.tags) ? taskData.tags : [],
+            link: taskData.link || "",
+            bilder: Array.isArray(taskData.bilder) ? taskData.bilder : [],
+            wiederkehrend: this.parseRecurrence(taskData.wiederkehrend),
+            erinnerung: this.parseReminder(taskData.erinnerung),
             notizen: notizen,
             filePath: filePath
         };
+
 
         return task;
     }
 
     private parseRecurrence(data: unknown): TaskModel["wiederkehrend"] {
-
         if (!data || typeof data !== "object") {
             return { aktiv: false, intervall: null, wert: null };
         }
+        const d = data as Record<string, any>;
         return {
-            aktiv: data.aktiv === true,
-            intervall: data.intervall as RecurrenceInterval | null,
-            wert: data.wert ?? null,
-            wochentag: data.wochentag ?? null,
-            monatstag: data.monatstag ?? null
+            aktiv: d.aktiv === true,
+            intervall: d.intervall as RecurrenceInterval | null,
+            wert: d.wert ?? null,
+            wochentag: d.wochentag ?? null,
+            monatstag: d.monatstag ?? null
         };
     }
 
-    private parseReminder(data: unknown): TaskModel["erinnerung"] {
 
+    private parseReminder(data: unknown): TaskModel["erinnerung"] {
         if (!data || typeof data !== "object") {
             return { aktiv: false, zeit: null };
         }
+        const d = data as Record<string, any>;
         return {
-            aktiv: data.aktiv === true,
-            zeit: data.zeit as ReminderTime | null,
-            customMinutes: data.customMinutes ?? null
+            aktiv: d.aktiv === true,
+            zeit: d.zeit as ReminderTime | null,
+            customMinutes: d.customMinutes ?? null
         };
     }
+
 
     async writeTask(task: TaskModel): Promise<string> {
         const settings = this.getSettings();
@@ -243,6 +246,7 @@ export class FileStorage {
     }
 
     private manualStringify(obj: Record<string, any>, indent = 0): string {
+
 
         let result = "";
         const prefix = "  ".repeat(indent);
