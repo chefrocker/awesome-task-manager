@@ -15,11 +15,25 @@ export class ImageStorage {
 
     private async ensureFolder(folderPath: string): Promise<void> {
         const normalized = normalizePath(folderPath);
-        const folder = this.app.vault.getAbstractFileByPath(normalized);
-        if (!folder) {
-            await this.app.vault.createFolder(normalized);
+        if (normalized === "" || normalized === ".") return;
+
+        const parts = normalized.split("/");
+        let currentPath = "";
+        for (const part of parts) {
+            currentPath = currentPath === "" ? part : `${currentPath}/${part}`;
+            const abstractFile = this.app.vault.getAbstractFileByPath(currentPath);
+            if (!abstractFile) {
+                try {
+                    await this.app.vault.createFolder(currentPath);
+                } catch (e) {
+                    if (!(e instanceof Error && e.message.includes("already exists"))) {
+                        throw e;
+                    }
+                }
+            }
         }
     }
+
 
     async saveImage(file: File, taskName: string): Promise<string> {
         const settings = this.getSettings();

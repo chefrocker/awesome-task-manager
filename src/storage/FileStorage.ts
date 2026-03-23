@@ -35,11 +35,27 @@ export class FileStorage {
 
     async ensureFolder(folderPath: string): Promise<void> {
         const normalized = normalizePath(folderPath);
-        const folder = this.app.vault.getAbstractFileByPath(normalized);
-        if (!folder) {
-            await this.app.vault.createFolder(normalized);
+        if (normalized === "" || normalized === ".") return;
+
+        // Recursively create folders
+        const parts = normalized.split("/");
+        let currentPath = "";
+        for (const part of parts) {
+            currentPath = currentPath === "" ? part : `${currentPath}/${part}`;
+            const abstractFile = this.app.vault.getAbstractFileByPath(currentPath);
+            if (!abstractFile) {
+                try {
+                    await this.app.vault.createFolder(currentPath);
+                } catch (e) {
+                    // Ignore error if folder already exists
+                    if (!(e instanceof Error && e.message.includes("already exists"))) {
+                        throw e;
+                    }
+                }
+            }
         }
     }
+
 
     async readAllTasks(): Promise<TaskModel[]> {
         const settings = this.getSettings();

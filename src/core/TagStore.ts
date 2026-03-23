@@ -33,8 +33,15 @@ export class TagStore {
             const folderPath = normalizePath(".awesome-tasks");
             const folder = this.app.vault.getAbstractFileByPath(folderPath);
             if (!folder) {
-                await this.app.vault.createFolder(folderPath);
+                try {
+                    await this.app.vault.createFolder(folderPath);
+                } catch (e) {
+                    if (!(e instanceof Error && e.message.includes("already exists"))) {
+                        throw e;
+                    }
+                }
             }
+
 
             const path = normalizePath(TAG_STORE_PATH);
             const content = JSON.stringify({ tags: this.tags }, null, 2);
