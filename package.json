@@ -1,0 +1,25 @@
+{
+    "name": "awesome-task-manager",
+    "version": "1.0.0",
+    "description": "Awesome Task Manager – Obsidian Plugin",
+    "main": "main.js",
+    "scripts": {
+        "dev": "node esbuild.config.mjs",
+        "build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production"
+    },
+    "keywords": [
+        "obsidian",
+        "plugin",
+        "task-manager"
+    ],
+    "author": "Sandro Ballarini",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/node": "^20.11.0",
+        "esbuild": "^0.19.0",
+        "obsidian": "latest",
+        "typescript": "^5.3.0",
+        "tslib": "^2.6.0",
+        "builtin-modules": "^3.3.0"
+    }
+}
