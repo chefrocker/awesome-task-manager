@@ -17,9 +17,11 @@ export class ExportButton {
             cls: "atm-export-button"
         });
 
-        btn.addEventListener("click", async () => {
-            const tasks = getTasks();
-            await this.exportToClipboard(tasks);
+        btn.addEventListener("click", () => {
+            void (async () => {
+                const tasks = getTasks();
+                await this.exportToClipboard(tasks);
+            })();
         });
     }
 

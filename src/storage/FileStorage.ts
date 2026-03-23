@@ -106,11 +106,11 @@ export class FileStorage {
         }
 
         if (!data || typeof data !== "object" || !("aufgabe" in data)) return null;
-        const taskData = data as Record<string, any>;
+        const taskData = data as Record<string, unknown>;
 
 
         // Notizen aus dem Body extrahieren (nach dem Frontmatter)
-        let notizen = taskData.notizen || "";
+        let notizen = (taskData.notizen as string) || "";
         const bodyContent = content.substring(match[0].length).trim();
         if (bodyContent) {
             // Entferne "## Notizen" Header falls vorhanden
@@ -120,22 +120,22 @@ export class FileStorage {
             }
         }
 
-        const prioritaet = priorityFromString(taskData.prioritaet || "Normal");
+        const prioritaet = priorityFromString((taskData.prioritaet as string) || "Normal");
 
         const task: TaskModel = {
-            aufgabe: taskData.aufgabe || "",
-            bezeichnung: taskData.bezeichnung || "",
+            aufgabe: (taskData.aufgabe as string) || "",
+            bezeichnung: (taskData.bezeichnung as string) || "",
             prioritaet: prioritaet,
             prioritaet_nr: priorityToNumber(prioritaet),
-            status: statusFromString(taskData.status || "Offen"),
-            anfangsdatum: parseDate(taskData.anfangsdatum) || new Date(),
-            faelligkeitsdatum: parseDate(taskData.faelligkeitsdatum),
-            abschlussdatum: parseDate(taskData.abschlussdatum),
+            status: statusFromString((taskData.status as string) || "Offen"),
+            anfangsdatum: parseDate(taskData.anfangsdatum as string) || new Date(),
+            faelligkeitsdatum: parseDate(taskData.faelligkeitsdatum as string),
+            abschlussdatum: parseDate(taskData.abschlussdatum as string),
             prozent: typeof taskData.prozent === "number" ? taskData.prozent : 0,
             erledigt: taskData.erledigt === true || taskData.prozent === 100,
-            tags: Array.isArray(taskData.tags) ? taskData.tags : [],
-            link: taskData.link || "",
-            bilder: Array.isArray(taskData.bilder) ? taskData.bilder : [],
+            tags: Array.isArray(taskData.tags) ? (taskData.tags as string[]) : [],
+            link: (taskData.link as string) || "",
+            bilder: Array.isArray(taskData.bilder) ? (taskData.bilder as string[]) : [],
             wiederkehrend: this.parseRecurrence(taskData.wiederkehrend),
             erinnerung: this.parseReminder(taskData.erinnerung),
             notizen: notizen,
@@ -150,13 +150,13 @@ export class FileStorage {
         if (!data || typeof data !== "object") {
             return { aktiv: false, intervall: null, wert: null };
         }
-        const d = data as Record<string, any>;
+        const d = data as Record<string, unknown>;
         return {
             aktiv: d.aktiv === true,
             intervall: d.intervall as RecurrenceInterval | null,
-            wert: d.wert ?? null,
-            wochentag: d.wochentag ?? null,
-            monatstag: d.monatstag ?? null
+            wert: (d.wert as number) ?? null,
+            wochentag: (d.wochentag as number) ?? null,
+            monatstag: (d.monatstag as number) ?? null
         };
     }
 
@@ -165,11 +165,11 @@ export class FileStorage {
         if (!data || typeof data !== "object") {
             return { aktiv: false, zeit: null };
         }
-        const d = data as Record<string, any>;
+        const d = data as Record<string, unknown>;
         return {
             aktiv: d.aktiv === true,
             zeit: d.zeit as ReminderTime | null,
-            customMinutes: d.customMinutes ?? null
+            customMinutes: (d.customMinutes as number) ?? null
         };
     }
 
@@ -261,7 +261,7 @@ export class FileStorage {
 
     }
 
-    private manualStringify(obj: Record<string, any>, indent = 0): string {
+    private manualStringify(obj: Record<string, unknown>, indent = 0): string {
 
 
         let result = "";
@@ -280,7 +280,7 @@ export class FileStorage {
                 }
             } else if (typeof value === "object") {
                 result += `${prefix}${key}:\n`;
-                result += this.manualStringify(value, indent + 1);
+                result += this.manualStringify(value as Record<string, unknown>, indent + 1);
             } else if (typeof value === "string") {
                 result += `${prefix}${key}: "${value.replace(/"/g, '\\"')}"\n`;
             } else {

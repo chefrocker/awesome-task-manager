@@ -164,7 +164,7 @@ export default class AwesomeTaskManagerPlugin extends Plugin {
         }
 
         if (leaf) {
-            this.app.workspace.revealLeaf(leaf);
+            void this.app.workspace.revealLeaf(leaf);
         }
 
     }

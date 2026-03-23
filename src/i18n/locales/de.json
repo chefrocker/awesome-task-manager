@@ -81,5 +81,7 @@
     "summary.title": "📋 Tägliche Zusammenfassung",
     "summary.overdue": "Überfällige Aufgaben",
     "summary.today": "Heute fällig",
-    "summary.none": "Keine fälligen Aufgaben – alles erledigt! 🎉"
+    "summary.none": "Keine fälligen Aufgaben – alles erledigt! 🎉",
+    "task.field.intervalValue": "Intervall-Wert (Tage/Wochen/Monate)",
+    "task.field.reminderMinutes": "Minuten vorher"
 }

@@ -259,7 +259,7 @@ export class TaskDetailView {
             .setName(t("task.field.link"))
             .addText((text) =>
                 text
-                    .setPlaceholder("Https://...")
+                    .setPlaceholder("https://...")
 
                     .setValue(this.task.link)
                     .onChange(async (v) => {
@@ -436,7 +436,7 @@ export class TaskDetailView {
         // Intervall-Wert (nur wenn aktiv und custom)
         if (this.task.wiederkehrend.aktiv) {
             new Setting(form)
-                .setName("Intervall-Wert (Tage/Wochen/Monate)")
+                .setName(t("task.field.intervalValue"))
                 .addText((text) => {
                     text.inputEl.type = "number";
                     text.inputEl.min = "1";
@@ -513,7 +513,7 @@ export class TaskDetailView {
             this.task.erinnerung.zeit === ReminderTime.CUSTOM
         ) {
             new Setting(form)
-                .setName("Minuten vorher")
+                .setName(t("task.field.reminderMinutes"))
                 .addText((text) => {
                     text.inputEl.type = "number";
                     text.inputEl.min = "1";

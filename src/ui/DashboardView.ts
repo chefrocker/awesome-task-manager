@@ -11,7 +11,7 @@ import { RecurrenceEngine } from "../core/RecurrenceEngine";
 import { PluginSettings } from "../settings/SettingsModel";
 import { TabBar, TabId } from "./TabBar";
 import { FilterBar } from "./FilterBar";
-import { TaskTable, TaskTableCallbacks } from "./TaskTable";
+import { TaskTable } from "./TaskTable";
 import { TaskCreateModal } from "./TaskCreateModal";
 import { TaskDetailView } from "./TaskDetailView";
 import { ExportButton } from "./ExportButton";

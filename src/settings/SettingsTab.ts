@@ -126,8 +126,8 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
             .setDesc(t("settings.dateFormat.desc"))
             .addDropdown((dropdown) =>
                 dropdown
-                    .addOption("dd.MM.yyyy", "Dd.MM.yyyy (23.03.2026)")
-                    .addOption("yyyy-MM-dd", "Yyyy-mm-dd (2026-03-23)")
+                    .addOption("dd.MM.yyyy", "dd.MM.yyyy (23.03.2026)")
+                    .addOption("yyyy-MM-dd", "yyyy-mm-dd (2026-03-23)")
                     .setValue(this.settings.dateFormat)
                     .onChange(async (value) => {
                         this.settings.dateFormat = value as "dd.MM.yyyy" | "yyyy-MM-dd";

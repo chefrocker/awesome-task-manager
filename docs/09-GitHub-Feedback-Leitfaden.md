@@ -52,3 +52,25 @@ Dieses Dokument dient als Checkliste, um die bei der GitHub-Review (PR #11303) f
 Um diese Fehler vor dem nächsten Push zu finden:
 1. Installiere das [eslint-plugin-obsidian](https://github.com/obsidianmd/eslint-plugin).
 2. Führe den Linter lokal aus.
+
+---
+
+## 📝 Update PR #11303 Review (23.03.2026) – Fehlerkorrektur
+
+Folgende Korrekturen wurden am Plugin vorgenommen, um den Review-Anforderungen zu entsprechen:
+
+### 1. Korrektur der zwingenden Anforderungen (Required)
+- **main.ts (L167):** `revealLeaf(leaf)` wird nun korrekt mit `void` markiert, da es ein Promise zurückgeben kann.
+- **SettingsTab.ts / TaskCreateModal.ts / TaskDetailView.ts:** UI-Texte und Placeholders wurden auf *Sentence case* umgestellt:
+  - `"Dd.MM.yyyy"` -> `"dd.MM.yyyy"`
+  - `"Tag1, Tag2, ..."` -> `"tag1, tag2, ..."`
+  - `"Https://..."` -> `"https://..."`
+  - `"Intervall-Wert"` wurde in die Sprachdateien verschoben und übersetzt.
+- **FileStorage.ts:** Alle Vorkommen von `any` wurden entfernt und durch `Record<string, unknown>` mit typsicheren Zugriffen ersetzt.
+- **ExportButton.ts:** Im Event-Listener (`click`) wird das Promise nun sicher in einen `void`-Block gewrappt.
+- **TaskTable.ts:** Unnötige Typ-Zusicherungen (`as HTMLInputElement`) beim Erstellen von Elementen wurden entfernt.
+
+### 2. Optionale Optimierungen (Optional)
+- **DashboardView.ts:** Der unbenutzte Import `TaskTableCallbacks` wurde entfernt.
+
+Alle Probleme aus dem automatisierten Scan sind damit behoben.

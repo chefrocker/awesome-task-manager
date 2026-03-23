@@ -252,7 +252,7 @@ export class TaskTable {
         const slider = wrapper.createEl("input", {
             type: "range",
             cls: "atm-percent-slider"
-        }) as HTMLInputElement;
+        });
         slider.min = "0";
         slider.max = "100";
         slider.step = "5";
@@ -320,7 +320,7 @@ export class TaskTable {
             type: "text",
             cls: "atm-tag-input",
             placeholder: "Tag..."
-        }) as HTMLInputElement;
+        });
 
         const suggestionsDiv = wrapper.createDiv({
             cls: "atm-tag-suggestions"

@@ -81,5 +81,7 @@
     "summary.title": "📋 Daily Summary",
     "summary.overdue": "Overdue Tasks",
     "summary.today": "Due Today",
-    "summary.none": "No tasks due – all clear! 🎉"
+    "summary.none": "No tasks due – all clear! 🎉",
+    "task.field.intervalValue": "Interval value (days/weeks/months)",
+    "task.field.reminderMinutes": "Minutes before"
 }

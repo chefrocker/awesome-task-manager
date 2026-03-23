@@ -115,7 +115,7 @@ export class TaskCreateModal extends Modal {
         // Tags
         new Setting(contentEl).setName(t("task.field.tags")).addText(
             (text) => {
-                text.setPlaceholder("Tag1, Tag2, ...");
+                text.setPlaceholder("tag1, tag2, ...");
                 text.onChange((v) => {
                     this.formData.tags = v
                         .split(",")
@@ -160,7 +160,7 @@ export class TaskCreateModal extends Modal {
         new Setting(contentEl)
             .setName(t("task.field.link"))
             .addText((text) =>
-                text.setPlaceholder("Https://...").onChange((v) => {
+                text.setPlaceholder("https://...").onChange((v) => {
                     this.formData.link = v;
                 })
             );
