@@ -29,7 +29,8 @@ export default class AwesomeTaskManagerPlugin extends Plugin {
     private reminderEngine!: ReminderEngine;
 
     async onload(): Promise<void> {
-        console.log("Awesome Task Manager: Loading plugin...");
+        console.debug("Awesome Task Manager: Loading plugin...");
+
 
         // Einstellungen laden
         await this.loadSettings();
@@ -84,28 +85,31 @@ export default class AwesomeTaskManagerPlugin extends Plugin {
         );
 
         // Ribbon-Icon
-        this.addRibbonIcon("check-square", "Awesome Task Manager", () => {
-            this.activateDashboard();
+        this.addRibbonIcon("check-square", "Awesome task manager", () => {
+            void this.activateDashboard();
         });
+
 
         // Command: Dashboard öffnen
         this.addCommand({
             id: "open-awesome-task-dashboard",
-            name: "Open Task Dashboard",
+            name: "Open task dashboard",
             callback: () => {
-                this.activateDashboard();
+                void this.activateDashboard();
             }
         });
+
 
         // Command: Neue Aufgabe
         this.addCommand({
             id: "create-new-task",
-            name: "Create New Task",
+            name: "Create new task",
             callback: () => {
-                this.activateDashboard();
+                void this.activateDashboard();
                 // Modal wird über Dashboard geöffnet
             }
         });
+
 
         // Initiales Laden der Tasks
         await this.taskManager.refresh();
@@ -115,17 +119,19 @@ export default class AwesomeTaskManagerPlugin extends Plugin {
 
         // Tägliche Zusammenfassung
         this.app.workspace.onLayoutReady(() => {
-            this.showDailySummaryIfNeeded();
+            void this.showDailySummaryIfNeeded();
         });
 
-        console.log("Awesome Task Manager: Plugin loaded successfully.");
+
+        console.debug("Awesome Task Manager: Plugin loaded successfully.");
+
     }
 
-    async onunload(): Promise<void> {
-        console.log("Awesome Task Manager: Unloading plugin...");
+    onunload(): void {
+        console.debug("Awesome Task Manager: Unloading plugin...");
         this.reminderEngine.stop();
-        this.app.workspace.detachLeavesOfType(VIEW_TYPE_DASHBOARD);
     }
+
 
     // ---- Settings ----
 
@@ -158,8 +164,9 @@ export default class AwesomeTaskManagerPlugin extends Plugin {
         }
 
         if (leaf) {
-            workspace.revealLeaf(leaf);
+            this.app.workspace.revealLeaf(leaf);
         }
+
     }
 
     // ---- Tägliche Zusammenfassung ----

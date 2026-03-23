@@ -3,11 +3,13 @@
 // Awesome Task Manager – Obsidian Plugin
 // ============================================================
 
-import { App, PluginSettingTab, Setting, TextComponent } from "obsidian";
+import { App, PluginSettingTab, Setting } from "obsidian";
 import { PluginSettings } from "./SettingsModel";
 import { Priority } from "../core/TaskModel";
 import { TagStore } from "../core/TagStore";
 import { t, setLanguage } from "../i18n/i18n";
+import AwesomeTaskManagerPlugin from "../main";
+
 
 export class AwesomeTaskSettingsTab extends PluginSettingTab {
     private settings: PluginSettings;
@@ -16,7 +18,8 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
 
     constructor(
         app: App,
-        plugin: any,
+        plugin: AwesomeTaskManagerPlugin,
+
         settings: PluginSettings,
         tagStore: TagStore,
         saveSettings: () => Promise<void>
@@ -30,7 +33,12 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
-        containerEl.createEl("h2", { text: t("settings.title") });
+
+        
+        new Setting(containerEl)
+            .setName(t("settings.title"))
+            .setHeading();
+
 
         // Aufgaben-Ordner
         new Setting(containerEl)
@@ -106,10 +114,11 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
                     .addOption("all", t("dashboard.tab.all"))
                     .setValue(this.settings.defaultTab)
                     .onChange(async (value) => {
-                        this.settings.defaultTab = value as any;
+                        this.settings.defaultTab = value as "today" | "week" | "open" | "all";
                         await this.saveSettings();
                     })
             );
+
 
         // Datumsformat
         new Setting(containerEl)
@@ -117,14 +126,15 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
             .setDesc(t("settings.dateFormat.desc"))
             .addDropdown((dropdown) =>
                 dropdown
-                    .addOption("dd.MM.yyyy", "dd.MM.yyyy (23.03.2026)")
-                    .addOption("yyyy-MM-dd", "yyyy-MM-dd (2026-03-23)")
+                    .addOption("dd.MM.yyyy", "Dd.MM.yyyy (23.03.2026)")
+                    .addOption("yyyy-MM-dd", "Yyyy-mm-dd (2026-03-23)")
                     .setValue(this.settings.dateFormat)
                     .onChange(async (value) => {
-                        this.settings.dateFormat = value as any;
+                        this.settings.dateFormat = value as "dd.MM.yyyy" | "yyyy-MM-dd";
                         await this.saveSettings();
                     })
             );
+
 
         // Tägliche Zusammenfassung
         new Setting(containerEl)
@@ -140,7 +150,10 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
             );
 
         // Tag-Verwaltung
-        containerEl.createEl("h3", { text: t("settings.tags") });
+        new Setting(containerEl)
+            .setName(t("settings.tags"))
+            .setHeading();
+
         containerEl.createEl("p", {
             text: t("settings.tags.desc"),
             cls: "setting-item-description"
@@ -163,7 +176,8 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
                 );
 
                 tagSetting.addButton((btn) =>
-                    btn.setButtonText(t("settings.tags.rename")).onClick(async () => {
+                    btn.setButtonText(t("settings.tags.rename")).onClick(() => {
+
                         const inputEl = tagSetting.controlEl.querySelector(
                             "input"
                         ) as HTMLInputElement;
@@ -178,7 +192,8 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
                     btn
                         .setButtonText(t("settings.tags.delete"))
                         .setWarning()
-                        .onClick(async () => {
+                        .onClick(() => {
+
                             this.tagStore.removeTag(tag);
                             this.display();
                         })

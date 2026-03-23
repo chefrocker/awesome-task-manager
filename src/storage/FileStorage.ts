@@ -13,7 +13,6 @@ import {
 } from "obsidian";
 import {
     TaskModel,
-    createDefaultTask,
     priorityFromString,
     priorityToString,
     priorityToNumber,
@@ -21,10 +20,11 @@ import {
     parseDate,
     formatDate,
     sanitizeFilename,
-    Status,
     RecurrenceInterval,
     ReminderTime
 } from "../core/TaskModel";
+
+
 import { PluginSettings } from "../settings/SettingsModel";
 
 export class FileStorage {
@@ -80,7 +80,8 @@ export class FileStorage {
         const match = content.match(frontmatterRegex);
         if (!match) return null;
 
-        let data: Record<string, any>;
+        let data: Record<string, unknown>;
+
         try {
             data = parseYaml(match[1]);
         } catch (e) {
@@ -88,7 +89,9 @@ export class FileStorage {
             return null;
         }
 
-        if (!data || !data.aufgabe) return null;
+        if (!data || typeof data !== "object" || !("aufgabe" in data)) return null;
+        const taskData = data as Record<string, any>;
+
 
         // Notizen aus dem Body extrahieren (nach dem Frontmatter)
         let notizen = data.notizen || "";
@@ -126,7 +129,8 @@ export class FileStorage {
         return task;
     }
 
-    private parseRecurrence(data: any): TaskModel["wiederkehrend"] {
+    private parseRecurrence(data: unknown): TaskModel["wiederkehrend"] {
+
         if (!data || typeof data !== "object") {
             return { aktiv: false, intervall: null, wert: null };
         }
@@ -139,7 +143,8 @@ export class FileStorage {
         };
     }
 
-    private parseReminder(data: any): TaskModel["erinnerung"] {
+    private parseReminder(data: unknown): TaskModel["erinnerung"] {
+
         if (!data || typeof data !== "object") {
             return { aktiv: false, zeit: null };
         }
@@ -154,7 +159,8 @@ export class FileStorage {
         const settings = this.getSettings();
         await this.ensureFolder(settings.taskFolder);
 
-        const frontmatter: Record<string, any> = {
+        const frontmatter: Record<string, unknown> = {
+
             aufgabe: task.aufgabe,
             bezeichnung: task.bezeichnung,
             prioritaet: priorityToString(task.prioritaet),
@@ -190,7 +196,8 @@ export class FileStorage {
         let yaml: string;
         try {
             yaml = stringifyYaml(frontmatter);
-        } catch (e) {
+        } catch {
+
             // Fallback: manuell serialisieren
             yaml = this.manualStringify(frontmatter);
         }
@@ -230,11 +237,13 @@ export class FileStorage {
         if (!task.filePath) return;
         const file = this.app.vault.getAbstractFileByPath(task.filePath);
         if (file && file instanceof TFile) {
-            await this.app.vault.delete(file);
+            await this.app.fileManager.trashFile(file);
         }
+
     }
 
     private manualStringify(obj: Record<string, any>, indent = 0): string {
+
         let result = "";
         const prefix = "  ".repeat(indent);
         for (const [key, value] of Object.entries(obj)) {

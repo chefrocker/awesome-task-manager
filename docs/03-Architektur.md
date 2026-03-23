@@ -13,7 +13,48 @@ Das Plugin folgt einer modularen Schichtenarchitektur mit klarer Trennung
 von Daten, Logik und Darstellung. Jedes Modul hat eine einzige
 Verantwortung und kommuniziert über definierte Schnittstellen.
 
-+-------------------------------------------------------+ | Obsidian App | +-------------------------------------------------------+ | main.ts (Entry Point) | +-------------------------------------------------------+ | | | +-------------------+ +------------------------+ | | | UI Layer | | Settings Layer | | | | | | | | | | DashboardView | | SettingsTab | | | | TabBar | | SettingsModel | | | | FilterBar | +------------------------+ | | | TaskTable | | | | TaskDetailView | +------------------------+ | | | TaskCreateModal | | i18n Layer | | | | ExportButton | | | | | +--------+----------+ | i18n.ts | | | | | locales/de.json | | | v | locales/en.json | | | +-------------------+ +------------------------+ | | | Core Layer | | | | | | | | TaskManager | | | | TaskModel | | | | TagStore | | | | RecurrenceEngine | | | | ReminderEngine | | | +--------+----------+ | | | | | v | | +-------------------+ | | | Storage Layer | | | | | | | | FileStorage | | | | ImageStorage | | | +-------------------+ | | | +-------------------------------------------------------+ | Obsidian Vault (Dateisystem) | +-------------------------------------------------------+
+```text
++-------------------------------------------------------+
+|                    Obsidian App                       |
++-------------------------------------------------------+
+|                main.ts (Entry Point)                  |
++-------------------------------------------------------+
+|                           |                           |
+|       +-------------------+ +------------------------+ |
+|       |      UI Layer     | |    Settings Layer    | |
+|       |                   | |                      | |
+|       |   DashboardView   | |      SettingsTab     | |
+|       |      TabBar       | |     SettingsModel    | |
+|       |     FilterBar     | +------------------------+ |
+|       |     TaskTable     |                            |
+|       |   TaskDetailView  | +------------------------+ |
+|       |   TaskCreateModal | |       i18n Layer       | |
+|       |    ExportButton   | |                        | |
+|       +--------+----------+ |         i18n.ts        | |
+|                |            |     locales/de.json    | |
+|                v            |     locales/en.json    | |
+|       +-------------------+ +------------------------+ |
+|       |     Core Layer    |                            |
+|       |                   |                            |
+|       |    TaskManager    |                            |
+|       |     TaskModel     |                            |
+|       |     TagStore      |                            |
+|       |  RecurrenceEngine |                            |
+|       |   ReminderEngine  |                            |
+|       +--------+----------+                            |
+|                |                                      |
+|                v                                      |
+|       +-------------------+                            |
+|       |   Storage Layer   |                            |
+|       |                   |                            |
+|       |    FileStorage    |                            |
+|       |   ImageStorage    |                            |
+|       +-------------------+                            |
+|                           |                           |
++-------------------------------------------------------+
+|             Obsidian Vault (Dateisystem)              |
++-------------------------------------------------------+
+```
 
 
 
@@ -139,3 +180,14 @@ Vault/ ├── Aufgaben/ ← Konfigurierbar │ ├── Jens GLC neue Trends
 | Eigene Tag-JSON statt Obsidian-Tags | Unabhängigkeit, Autocomplete-Kontrolle |
 | esbuild als Bundler             | Obsidian-Standard, schnell              |
 | Keine externen Libraries        | Keine Abhängigkeitskonflikte, klein     |
+
+---
+
+## 7. Entwicklungs-Leitlinien (GitHub Review)
+
+Um die Aufnahme in den Obsidian Community Store sicherzustellen, müssen die im [GitHub-Feedback-Leitfaden](../docs/09-GitHub-Feedback-Leitfaden.md) definierten Regeln strikt eingehalten werden. Dies betrifft insbesondere:
+
+- Korrektes Error-Logging (kein `console.log`)
+- Sauberes Promise-Handling (`await`, `catch` oder `void`)
+- Verwendung von Obsidian-UI-Komponenten (`new Setting()`) statt nativem HTML/JS
+- Respektieren der Nutzer-Einstellungen (z.B. Paper-Trash-Funktion)

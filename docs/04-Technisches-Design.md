@@ -9,13 +9,91 @@
 
 ## 1. Klassendiagramm (Vereinfacht)
 
-TaskModel ├── aufgabe: string ├── bezeichnung: string ├── prioritaet: Priority (enum) ├── prioritaet_nr: number ├── status: Status (enum) ├── anfangsdatum: Date ├── faelligkeitsdatum: Date | null ├── abschlussdatum: Date | null ├── prozent: number ├── erledigt: boolean (computed) ├── tags: string[] ├── link: string ├── bilder: string[] ├── wiederkehrend: RecurrenceRule | null ├── erinnerung: ReminderRule | null ├── notizen: string └── filePath: string
-TaskManager ├── tasks: TaskModel[] ├── create(data: Partial<TaskModel>): TaskModel ├── update(task: TaskModel, changes: Partial<TaskModel>): TaskModel ├── delete(task: TaskModel): void ├── getAll(): TaskModel[] ├── getFiltered(filters: FilterOptions): TaskModel[] ├── getTodayAndOverdue(): TaskModel[] ├── getThisWeek(): TaskModel[] ├── getOpen(): TaskModel[] ├── applyLogics(task: TaskModel, changes: Partial<TaskModel>): TaskModel └── refresh(): void
-TagStore ├── tags: string[] ├── load(): void ├── save(): void ├── addTags(newTags: string[]): void ├── removeTag(tag: string): void ├── renameTag(oldName: string, newName: string): void └── getSuggestions(input: string): string[]
-RecurrenceEngine ├── check(task: TaskModel): void ├── createNext(task: TaskModel): TaskModel └── calculateNextDate(rule: RecurrenceRule, from: Date): Date
-ReminderEngine ├── start(): void ├── stop(): void ├── checkReminders(): void └── showNotification(task: TaskModel): void
-FileStorage ├── readTask(path: string): TaskModel ├── writeTask(task: TaskModel): void ├── deleteTask(task: TaskModel): void ├── readAllTasks(folder: string): TaskModel[] └── parseFrontmatter(content: string): object
-ImageStorage ├── saveImage(file: File, taskName: string): string ├── renameOnComplete(imagePath: string): string └── generateFilename(originalName: string): string
+### TaskModel
+```text
+TaskModel
+├── aufgabe: string
+├── bezeichnung: string
+├── prioritaet: Priority (enum)
+├── prioritaet_nr: number
+├── status: Status (enum)
+├── anfangsdatum: Date
+├── faelligkeitsdatum: Date | null
+├── abschlussdatum: Date | null
+├── prozent: number
+├── erledigt: boolean (computed)
+├── tags: string[]
+├── link: string
+├── bilder: string[]
+├── wiederkehrend: RecurrenceRule | null
+├── erinnerung: ReminderRule | null
+├── notizen: string
+└── filePath: string
+```
+
+### TaskManager
+```text
+TaskManager
+├── tasks: TaskModel[]
+├── create(data: Partial<TaskModel>): TaskModel
+├── update(task: TaskModel, changes: Partial<TaskModel>): TaskModel
+├── delete(task: TaskModel): void
+├── getAll(): TaskModel[]
+├── getFiltered(filters: FilterOptions): TaskModel[]
+├── getTodayAndOverdue(): TaskModel[]
+├── getThisWeek(): TaskModel[]
+├── getOpen(): TaskModel[]
+├── applyLogics(task: TaskModel, changes: Partial<TaskModel>): TaskModel
+└── refresh(): void
+```
+
+### TagStore
+```text
+TagStore
+├── tags: string[]
+├── load(): void
+├── save(): void
+├── addTags(newTags: string[]): void
+├── removeTag(tag: string): void
+├── renameTag(oldName: string, newName: string): void
+└── getSuggestions(input: string): string[]
+```
+
+### RecurrenceEngine
+```text
+RecurrenceEngine
+├── check(task: TaskModel): void
+├── createNext(task: TaskModel): TaskModel
+└── calculateNextDate(rule: RecurrenceRule, from: Date): Date
+```
+
+### ReminderEngine
+```text
+ReminderEngine
+├── start(): void
+├── stop(): void
+├── checkReminders(): void
+└── showNotification(task: TaskModel): void
+```
+
+### FileStorage
+```text
+FileStorage
+├── readTask(path: string): TaskModel
+├── writeTask(task: TaskModel): void
+├── deleteTask(task: TaskModel): void
+├── readAllTasks(folder: string): TaskModel[]
+└── parseFrontmatter(content: string): object
+```
+
+### ImageStorage
+```text
+ImageStorage
+├── saveImage(file: File, taskName: string): string
+├── renameOnComplete(imagePath: string): string
+└── generateFilename(originalName: string): string
+```
+
 
 
 
@@ -48,10 +126,45 @@ interface FilterOptions {
   searchText?: string;
   tab?: "today" | "week" | "open" | "all";
 }
-interface RecurrenceRule { aktiv: boolean; intervall: RecurrenceInterval | null; wert: number | null; // z.B. alle 2 Wochen → wert=2 wochentag?: number | null; // 0=Mo, 6=So (für wöchentlich) monatstag?: number | null; // 1-31 (für monatlich) }
-interface ReminderRule { aktiv: boolean; zeit: ReminderTime | null; customMinutes?: number | null; }
-interface PluginSettings { taskFolder: string; imageFolder: string; language: "de" | "en"; defaultPriority: Priority; defaultTab: "today" | "week" | "open" | "all"; dateFormat: "dd.MM.yyyy" | "yyyy-MM-dd"; dailySummary: boolean; defaultReminderTime: ReminderTime; }
-interface ExcelRow { aufgabe: string; bezeichnung: string; prioritaet: string; status: string; anfangsdatum: string; faelligkeitsdatum: string; abschlussdatum: string; prozentAbgeschlossen: string; erledigt: string; // Excel-Formel notizen: string; link: string; }
+interface RecurrenceRule {
+  aktiv: boolean;
+  intervall: RecurrenceInterval | null;
+  wert: number | null; // z.B. alle 2 Wochen → wert=2
+  wochentag?: number | null; // 0=Mo, 6=So (für wöchentlich)
+  monatstag?: number | null; // 1-31 (für monatlich)
+}
+
+interface ReminderRule {
+  aktiv: boolean;
+  zeit: ReminderTime | null;
+  customMinutes?: number | null;
+}
+
+interface PluginSettings {
+  taskFolder: string;
+  imageFolder: string;
+  language: "de" | "en";
+  defaultPriority: Priority;
+  defaultTab: "today" | "week" | "open" | "all";
+  dateFormat: "dd.MM.yyyy" | "yyyy-MM-dd";
+  dailySummary: boolean;
+  defaultReminderTime: ReminderTime;
+}
+
+interface ExcelRow {
+  aufgabe: string;
+  bezeichnung: string;
+  prioritaet: string;
+  status: string;
+  anfangsdatum: string;
+  faelligkeitsdatum: string;
+  abschlussdatum: string;
+  prozentAbgeschlossen: string;
+  erledigt: string; // Excel-Formel
+  notizen: string;
+  link: string;
+}
+
 
 
 
@@ -62,46 +175,80 @@ interface ExcelRow { aufgabe: string; bezeichnung: string; prioritaet: string; s
 ### 4.1 applyLogics Pseudocode
 
 ```typescript
+
 function applyLogics(task: TaskModel, changes: Partial<TaskModel>): TaskModel {
-// Logik A: Status → Abgeschlossen setzt 100% if (changes.status === Status.COMPLETED) { changes.prozent = 100; changes.abschlussdatum = new Date(); changes.erledigt = true; }
-// Logik B: 100% setzt Status Abgeschlossen + Datum if (changes.prozent === 100 && task.status !== Status.COMPLETED) { changes.status = Status.COMPLETED; changes.abschlussdatum = new Date(); changes.erledigt = true; }
-// Logik C: Offen + % > 0 → in Bearbeitung if (task.status === Status.OPEN && (changes.prozent ?? task.prozent) > 0) { changes.status = Status.IN_PROGRESS; }
-// Logik D: % unter 100 → in Bearbeitung + Abschlussdatum leeren if (changes.prozent !== undefined && changes.prozent < 100 && task.prozent === 100) { changes.status = Status.IN_PROGRESS; changes.abschlussdatum = null; changes.erledigt = false; }
-return { ...task, ...changes }; }
+  // Logik A: Status → Abgeschlossen setzt 100%
+  if (changes.status === Status.COMPLETED) {
+    changes.prozent = 100;
+    changes.abschlussdatum = new Date();
+    changes.erledigt = true;
+  }
+
+  // Logik B: 100% setzt Status Abgeschlossen + Datum
+  if (changes.prozent === 100 && task.status !== Status.COMPLETED) {
+    changes.status = Status.COMPLETED;
+    changes.abschlussdatum = new Date();
+    changes.erledigt = true;
+  }
+
+  // Logik C: Offen + % > 0 → in Bearbeitung
+  if (task.status === Status.OPEN && (changes.prozent ?? task.prozent) > 0) {
+    changes.status = Status.IN_PROGRESS;
+  }
+
+  // Logik D: % unter 100 → in Bearbeitung + Abschlussdatum leeren
+  if (changes.prozent !== undefined && changes.prozent < 100 && task.prozent === 100) {
+    changes.status = Status.IN_PROGRESS;
+    changes.abschlussdatum = null;
+    changes.erledigt = false;
+  }
+
+  return { ...task, ...changes };
+}
+```
+
 
 
 
 ### 4.2 Excel-Export Pseudocode
 
 ```typescript
+
 function exportToExcel(tasks: TaskModel[], settings: PluginSettings): string {
   const header = "AUFGABE\tBezeichnung\tPRIORITÄT\tSTATUS\t" +
     "ANFANGSDATUM\tFÄLLIGKEITSDATUM\tABSCHLUSSDATUM\t" +
     "% ABGESCHLOSSEN\tERLEDIGT?\tNOTIZEN\tLink";
-const rows = tasks.map(task => { const notizen = '"' + task.notizen.replace(/"/g, '""') + '"'; const erledigt = '=--([@[% ABGESCHLOSSEN]]>=1)';
 
+  const rows = tasks.map(task => {
+    const notizen = '"' + task.notizen.replace(/"/g, '""') + '"';
+    const erledigt = '=--([@[% ABGESCHLOSSEN]]>=1)';
 
-return [
-  task.aufgabe,
-  task.bezeichnung,
-  task.prioritaet,
-  task.status,
-  formatDate(task.anfangsdatum, settings.dateFormat),
-  formatDate(task.faelligkeitsdatum, settings.dateFormat),
-  formatDate(task.abschlussdatum, settings.dateFormat),
-  task.prozent + "%",
-  erledigt,
-  notizen,
-  task.link
-].join("\t");
-});
-return header + "\n" + rows.join("\n"); }
+    return [
+      task.aufgabe,
+      task.bezeichnung,
+      task.prioritaet,
+      task.status,
+      formatDate(task.anfangsdatum, settings.dateFormat),
+      formatDate(task.faelligkeitsdatum, settings.dateFormat),
+      formatDate(task.abschlussdatum, settings.dateFormat),
+      task.prozent + "%",
+      erledigt,
+      notizen,
+      task.link
+    ].join("\t");
+  });
+
+  return header + "\n" + rows.join("\n");
+}
+```
+
 
 
 
 ### 4.3 Bild-Umbenennung Pseudocode
 
 ```typescript
+
 function saveImage(file: File, taskName: string): string {
   const date = formatDate(new Date(), "yyyy-MM-dd");
   const ext = file.name.split('.').pop();
@@ -109,7 +256,18 @@ function saveImage(file: File, taskName: string): string {
   // Speichere in imageFolder
   return filename;
 }
-function renameOnComplete(imagePath: string): string { const filename = getFilename(imagePath); if (!filename.startsWith("Erledigt-")) { const newFilename = "Erledigt-" + filename; // Datei umbenennen return newFilename; } return filename; }
+
+function renameOnComplete(imagePath: string): string {
+  const filename = getFilename(imagePath);
+  if (!filename.startsWith("Erledigt-")) {
+    const newFilename = "Erledigt-" + filename;
+    // Datei umbenennen
+    return newFilename;
+  }
+  return filename;
+}
+```
+
 
 
 

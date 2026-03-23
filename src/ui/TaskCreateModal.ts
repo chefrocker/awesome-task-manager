@@ -9,9 +9,9 @@ import {
     Priority,
     RecurrenceInterval,
     ReminderTime,
-    createDefaultTask,
     parseDate
 } from "../core/TaskModel";
+
 import { TaskManager } from "../core/TaskManager";
 import { TagStore } from "../core/TagStore";
 import { PluginSettings } from "../settings/SettingsModel";
@@ -160,10 +160,11 @@ export class TaskCreateModal extends Modal {
         new Setting(contentEl)
             .setName(t("task.field.link"))
             .addText((text) =>
-                text.setPlaceholder("https://...").onChange((v) => {
+                text.setPlaceholder("Https://...").onChange((v) => {
                     this.formData.link = v;
                 })
             );
+
 
         // Wiederkehrend
         new Setting(contentEl)
@@ -264,22 +265,25 @@ export class TaskCreateModal extends Modal {
             text: t("modal.create.submit"),
             cls: "atm-btn-submit"
         });
-        submitBtn.addEventListener("click", async () => {
-            if (!this.formData.aufgabe || !this.formData.aufgabe.trim()) {
-                // Pflichtfeld fehlt
-                const input = contentEl.querySelector(
-                    "input"
-                ) as HTMLInputElement;
-                if (input) {
-                    input.addClass("atm-input-error");
-                    input.focus();
+        submitBtn.addEventListener("click", () => {
+            void (async () => {
+                if (!this.formData.aufgabe || !this.formData.aufgabe.trim()) {
+                    // Pflichtfeld fehlt
+                    const input = contentEl.querySelector(
+                        "input"
+                    ) as HTMLInputElement;
+                    if (input) {
+                        input.addClass("atm-input-error");
+                        input.focus();
+                    }
+                    return;
                 }
-                return;
-            }
-            await this.taskManager.create(this.formData);
-            this.onCreated();
-            this.close();
+                await this.taskManager.create(this.formData);
+                this.onCreated();
+                this.close();
+            })();
         });
+
     }
 
     onClose(): void {

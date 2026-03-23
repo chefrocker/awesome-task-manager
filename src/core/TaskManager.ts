@@ -6,15 +6,14 @@
 import {
     TaskModel,
     Status,
-    Priority,
     FilterOptions,
     createDefaultTask,
     priorityToNumber,
     isToday,
     isOverdue,
-    isThisWeek,
-    priorityFromString
+    isThisWeek
 } from "./TaskModel";
+
 import { FileStorage } from "../storage/FileStorage";
 import { ImageStorage } from "../storage/ImageStorage";
 import { TagStore } from "./TagStore";

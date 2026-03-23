@@ -10,9 +10,9 @@ import {
     formatDate,
     isOverdue,
     getPercentCssClass,
-    getPercentColor,
-    priorityToString
+    getPercentColor
 } from "../core/TaskModel";
+
 import { TaskManager } from "../core/TaskManager";
 import { TagStore } from "../core/TagStore";
 import { PluginSettings } from "../settings/SettingsModel";
@@ -179,13 +179,16 @@ export class TaskTable {
             }
         }
 
-        select.addEventListener("change", async () => {
-            const newPriority = parseInt(select.value) as Priority;
-            await this.taskManager.update(task, {
-                prioritaet: newPriority
-            });
-            this.callbacks.onTaskUpdated();
+        select.addEventListener("change", () => {
+            void (async () => {
+                const newPriority = parseInt(select.value) as Priority;
+                await this.taskManager.update(task, {
+                    prioritaet: newPriority
+                });
+                this.callbacks.onTaskUpdated();
+            })();
         });
+
     }
 
     private renderStatusDropdown(
@@ -218,12 +221,15 @@ export class TaskTable {
             }
         }
 
-        select.addEventListener("change", async () => {
-            await this.taskManager.update(task, {
-                status: select.value as Status
-            });
-            this.callbacks.onTaskUpdated();
+        select.addEventListener("change", () => {
+            void (async () => {
+                await this.taskManager.update(task, {
+                    status: select.value as Status
+                });
+                this.callbacks.onTaskUpdated();
+            })();
         });
+
     }
 
     private renderPercentSlider(
@@ -238,7 +244,10 @@ export class TaskTable {
             text: `${task.prozent}%`,
             cls: `atm-percent-label ${colorClass}`
         });
-        label.style.color = getPercentColor(task.prozent);
+        label.setCssProps({
+            "--percent-color": getPercentColor(task.prozent)
+        });
+
 
         const slider = wrapper.createEl("input", {
             type: "range",
@@ -252,14 +261,20 @@ export class TaskTable {
         slider.addEventListener("input", () => {
             label.textContent = `${slider.value}%`;
             const val = parseInt(slider.value);
-            label.style.color = getPercentColor(val);
+            label.setCssProps({
+                "--percent-color": getPercentColor(val)
+            });
         });
 
-        slider.addEventListener("change", async () => {
-            const newPercent = parseInt(slider.value);
-            await this.taskManager.update(task, { prozent: newPercent });
-            this.callbacks.onTaskUpdated();
+
+        slider.addEventListener("change", () => {
+            void (async () => {
+                const newPercent = parseInt(slider.value);
+                await this.taskManager.update(task, { prozent: newPercent });
+                this.callbacks.onTaskUpdated();
+            })();
         });
+
     }
 
     private renderTagsInline(cell: HTMLElement, task: TaskModel): void {
@@ -271,12 +286,15 @@ export class TaskTable {
                 cls: "atm-tag-badge"
             });
 
-            badge.addEventListener("click", async (e) => {
+            badge.addEventListener("click", (e) => {
                 e.stopPropagation();
-                const newTags = task.tags.filter((t) => t !== tag);
-                await this.taskManager.update(task, { tags: newTags });
-                this.callbacks.onTaskUpdated();
+                void (async () => {
+                    const newTags = task.tags.filter((t) => t !== tag);
+                    await this.taskManager.update(task, { tags: newTags });
+                    this.callbacks.onTaskUpdated();
+                })();
             });
+
         }
 
         // Kleiner Add-Button
@@ -295,7 +313,8 @@ export class TaskTable {
         task: TaskModel,
         addBtn: HTMLElement
     ): void {
-        addBtn.style.display = "none";
+        addBtn.addClass("atm-hidden");
+
 
         const input = wrapper.createEl("input", {
             type: "text",
@@ -318,25 +337,31 @@ export class TaskTable {
                     text: suggestion,
                     cls: "atm-tag-suggestion-item"
                 });
-                item.addEventListener("click", async () => {
-                    const newTags = [...task.tags, suggestion];
-                    await this.taskManager.update(task, {
-                        tags: newTags
-                    });
-                    cleanup();
-                    this.callbacks.onTaskUpdated();
+                item.addEventListener("click", () => {
+                    void (async () => {
+                        const newTags = [...task.tags, suggestion];
+                        await this.taskManager.update(task, {
+                            tags: newTags
+                        });
+                        cleanup();
+                        this.callbacks.onTaskUpdated();
+                    })();
                 });
+
             }
         });
 
-        input.addEventListener("keydown", async (e) => {
+        input.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && input.value.trim()) {
-                const newTags = [...task.tags, input.value.trim()];
-                await this.taskManager.update(task, { tags: newTags });
-                cleanup();
-                this.callbacks.onTaskUpdated();
+                void (async () => {
+                    const newTags = [...task.tags, input.value.trim()];
+                    await this.taskManager.update(task, { tags: newTags });
+                    cleanup();
+                    this.callbacks.onTaskUpdated();
+                })();
             }
             if (e.key === "Escape") {
+
                 cleanup();
             }
         });
@@ -348,8 +373,9 @@ export class TaskTable {
         const cleanup = () => {
             input.remove();
             suggestionsDiv.remove();
-            addBtn.style.display = "";
+            addBtn.removeClass("atm-hidden");
         };
+
 
         input.focus();
     }

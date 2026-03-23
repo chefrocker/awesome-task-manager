@@ -137,17 +137,15 @@ bilder: string[]          # Optional - Liste von Bildpfaden
 wiederkehrend: object     # Optional - Intervall-Konfiguration
 erinnerung: object        # Optional - Erinnerungs-Konfiguration
 notizen: string           # Optional - Mehrzeiliger Text
-3.2 Tag-Speicher
-json
-
-
+### 3.2 Tag-Speicher
+```json
 {
   "tags": ["Jens", "GLC", "Eliona", "Infrastruktur", "Timo"]
 }
-3.3 Plugin-Einstellungen
-json
+```
 
-
+### 3.3 Plugin-Einstellungen
+```json
 {
   "taskFolder": "Aufgaben",
   "imageFolder": "Anhaenge",
@@ -158,8 +156,13 @@ json
   "dailySummary": true,
   "defaultReminderTime": "same-day"
 }
+```
+
 4. Funktionsbeschreibungen
-4.1 Dashboard öffnen
+## 4. Funktionsbeschreibungen
+
+### 4.1 Dashboard öffnen
+
 Ablauf:
 Nutzer klickt auf das Plugin-Icon in der Sidebar ODER nutzt Command
 Dashboard öffnet sich als Custom View
@@ -167,7 +170,8 @@ Standard-Tab wird angezeigt (konfigurierbar)
 Filterleiste ist sichtbar
 Aufgaben werden aus dem konfigurierten Ordner geladen
 Tabelle wird gerendert
-4.2 Aufgabe erstellen
+### 4.2 Aufgabe erstellen
+
 Ablauf:
 Nutzer klickt auf Plus-Button im Dashboard ODER nutzt Command
 Modal öffnet sich mit Eingabefeldern
@@ -175,14 +179,16 @@ Pflichtfelder: Aufgabe (Titel)
 Optionale Felder vorausgefüllt mit Defaults
 Bei Bestätigung wird .md-Datei im Aufgaben-Ordner erstellt
 Dashboard aktualisiert sich automatisch
-4.3 Aufgabe inline bearbeiten
+### 4.3 Aufgabe inline bearbeiten
+
 Ablauf:
 Nutzer klickt auf ein Inline-Feld in der Tabelle
 Feld wird editierbar (Dropdown/Slider/Input)
 Bei Änderung werden automatische Logiken ausgeführt
 .md-Datei wird aktualisiert
 Tabelle aktualisiert sich
-4.4 Aufgabe in Detail-Ansicht bearbeiten
+### 4.4 Aufgabe in Detail-Ansicht bearbeiten
+
 Ablauf:
 Nutzer klickt auf Aufgabentitel in der Tabelle
 Detail-Ansicht öffnet sich (ersetzt Dashboard)
@@ -190,7 +196,8 @@ Alle Felder sind editierbar
 Bilder können hochgeladen werden
 Zurück-Button führt zum Dashboard
 Änderungen werden sofort in .md-Datei gespeichert
-4.5 Excel-Export
+### 4.5 Excel-Export
+
 Ablauf:
 Nutzer klickt Export-Button im aktuellen Tab
 Alle sichtbaren Aufgaben (nach Filter) werden exportiert
@@ -199,7 +206,8 @@ Spaltenreihenfolge: AUFGABE, Bezeichnung, PRIORITÄT, STATUS, ANFANGSDATUM, FÄL
 ERLEDIGT-Spalte enthält Formel: =--([@[% ABGESCHLOSSEN]]>=1)
 Mehrzeilige Notizen in Anführungszeichen
 Nutzer fügt in Excel ein mit Strg+V
-4.6 Wiederkehrende Aufgabe abschliessen
+### 4.6 Wiederkehrende Aufgabe abschliessen
+
 Ablauf:
 Nutzer setzt wiederkehrende Aufgabe auf 100%
 Logik B wird ausgeführt (Status Abgeschlossen + Datum)
@@ -210,20 +218,25 @@ Gleiche Felder wie Original
 Neues Fälligkeitsdatum gemäss Intervall
 Neues Anfangsdatum = heute
 Originalaufgabe bleibt als abgeschlossen bestehen
-4.7 Erinnerung auslösen
+### 4.7 Erinnerung auslösen
+
 Ablauf:
 ReminderEngine prüft regelmässig fällige Erinnerungen
 Bei Fälligkeit wird Obsidian Notice angezeigt
 Notice enthält Aufgabentitel und Fälligkeitsdatum
 Klick auf Notice öffnet die Aufgabe im Dashboard
-4.8 Tägliche Zusammenfassung
+### 4.8 Tägliche Zusammenfassung
+
 Ablauf:
 Nutzer öffnet Obsidian
 Plugin prüft ob Zusammenfassung heute schon angezeigt wurde
 Falls nicht: Modal mit Übersicht aller heute fälligen Tasks
 Überfällige Tasks werden hervorgehoben
 5. Benutzeroberfläche
-5.1 Dashboard Layout
+## 5. Benutzeroberfläche
+
+### 5.1 Dashboard Layout
+
 
 
 +----------------------------------------------------------+
@@ -238,7 +251,8 @@ Falls nicht: Modal mit Übersicht aller heute fälligen Tasks
 | Task 1 | Projekt A | Hoch | Offen | 25.03 | 50% |
 | Task 2 | Projekt B | Norm | Bearb. | 28.03 | 25% |
 +----------------------------------------------------------+
-5.2 Detail-Ansicht Layout
+### 5.2 Detail-Ansicht Layout
+
 
 
 +----------------------------------------------------------+
@@ -262,7 +276,8 @@ Falls nicht: Modal mit Übersicht aller heute fälligen Tasks
 | [                                                    ] |
 | [                                                    ] |
 +----------------------------------------------------------+
-5.3 Farbcodierung
+### 5.3 Farbcodierung
+
 Zustand	Farbe
 % = 0	Rot (#e74c3c)
 % = 1-24	Orange (#e67e22)
@@ -273,7 +288,10 @@ Zustand	Farbe
 
 Export as CSV
 6. Technische Umsetzung
-6.1 Technologie
+## 6. Technische Umsetzung
+
+### 6.1 Technologie
+
 Komponente	Technologie
 Sprache	TypeScript
 API	Obsidian Plugin API
@@ -282,11 +300,14 @@ Build	esbuild
 Datenspeicherung	Markdown-Dateien + JSON
 
 Export as CSV
-6.2 Modulstruktur
+### 6.2 Modulstruktur
+
 Siehe Architektur-Dokument (03-Architektur.md)
-6.3 Dateiformat einer Aufgabe
+### 6.3 Dateiformat einer Aufgabe
+
 Jede Aufgabe wird als .md-Datei mit YAML-Frontmatter gespeichert:
-yaml
+```yaml
+
 
 
 ---

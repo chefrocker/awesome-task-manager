@@ -141,8 +141,11 @@ export class DashboardView extends ItemView {
             this.getSettings,
             {
                 onTaskClick: (task) => this.openDetailView(task),
-                onTaskUpdated: () => this.refreshDashboard()
+                onTaskUpdated: () => {
+                    void this.refreshDashboard();
+                }
             }
+
         );
 
         // Daten laden und anzeigen
@@ -199,19 +202,23 @@ export class DashboardView extends ItemView {
             this.taskManager,
             this.tagStore,
             this.getSettings,
-            () => this.refreshDashboard()
+            () => {
+                void this.refreshDashboard();
+            }
         );
         modal.open();
     }
+
 
     private openDetailView(task: TaskModel): void {
         this.isDetailView = true;
 
         // Dashboard-Elemente ausblenden
-        this.headerEl.style.display = "none";
-        this.tabBarEl.style.display = "none";
-        this.filterBarEl.style.display = "none";
+        this.headerEl.addClass("atm-hidden");
+        this.tabBarEl.addClass("atm-hidden");
+        this.filterBarEl.addClass("atm-hidden");
         this.contentEl_main.empty();
+
 
         const detailView = new TaskDetailView(
             this.contentEl_main,
@@ -237,10 +244,11 @@ export class DashboardView extends ItemView {
         this.isDetailView = false;
 
         // Dashboard-Elemente wieder einblenden
-        this.headerEl.style.display = "";
-        this.tabBarEl.style.display = "";
-        this.filterBarEl.style.display = "";
+        this.headerEl.removeClass("atm-hidden");
+        this.tabBarEl.removeClass("atm-hidden");
+        this.filterBarEl.removeClass("atm-hidden");
 
-        this.refreshDashboard();
+        void this.refreshDashboard();
+
     }
 }

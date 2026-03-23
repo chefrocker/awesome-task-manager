@@ -84,10 +84,11 @@ export class DailySummaryModal extends Modal {
         for (const task of tasks) {
             const item = list.createEl("li", { cls: "atm-summary-item" });
 
-            const titleSpan = item.createEl("span", {
+            item.createEl("span", {
                 text: task.aufgabe,
                 cls: "atm-summary-task-title"
             });
+
 
             if (task.faelligkeitsdatum) {
                 item.createEl("span", {

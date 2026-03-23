@@ -64,7 +64,7 @@ export class TaskDetailView {
     render(): void {
         this.container.empty();
         this.container.addClass("atm-detail-view");
-        const settings = this.getSettings();
+
 
         // ---- Header mit Zurück und Löschen ----
         const header = this.container.createDiv({ cls: "atm-detail-header" });
@@ -78,12 +78,13 @@ export class TaskDetailView {
             text: t("detail.delete"),
             cls: "atm-btn-delete"
         });
-        deleteBtn.addEventListener("click", async () => {
-            if (confirm(t("detail.delete.confirm"))) {
+        deleteBtn.addEventListener("click", () => {
+            void (async () => {
                 await this.taskManager.delete(this.task);
                 this.callbacks.onDeleted();
-            }
+            })();
         });
+
 
         // ---- Formular ----
         const form = this.container.createDiv({ cls: "atm-detail-form" });
@@ -143,9 +144,10 @@ export class TaskDetailView {
                         });
                         // Wiederkehrende Aufgabe prüfen
                         if (
-                            v === Status.COMPLETED &&
+                            v === (Status.COMPLETED as string) &&
                             oldStatus !== Status.COMPLETED
                         ) {
+
                             await this.recurrenceEngine.check(this.task);
                             if (this.task.wiederkehrend.aktiv) {
                                 new Notice(t("notification.recurrence"), 5000);
@@ -209,9 +211,11 @@ export class TaskDetailView {
             text: `${this.task.prozent}%`,
             cls: `atm-percent-label ${getPercentCssClass(this.task.prozent)}`
         });
-        percentDisplay.style.color = getPercentColor(this.task.prozent);
-        percentDisplay.style.marginRight = "10px";
-        percentDisplay.style.fontWeight = "bold";
+        percentDisplay.addClass("atm-percent-detail-value");
+        percentDisplay.setCssProps({
+            "--percent-color": getPercentColor(this.task.prozent)
+        });
+
 
         percentSetting.addSlider((slider) =>
             slider
@@ -220,8 +224,11 @@ export class TaskDetailView {
                 .setDynamicTooltip()
                 .onChange(async (v) => {
                     percentDisplay.textContent = `${v}%`;
-                    percentDisplay.style.color = getPercentColor(v);
-                    percentDisplay.className = `atm-percent-label ${getPercentCssClass(v)}`;
+                    percentDisplay.setCssProps({
+                        "--percent-color": getPercentColor(v)
+                    });
+                    percentDisplay.className = `atm-percent-label atm-percent-detail-value ${getPercentCssClass(v)}`;
+
 
                     const oldStatus = this.task.status;
                     await this.taskManager.update(this.task, {
@@ -252,7 +259,8 @@ export class TaskDetailView {
             .setName(t("task.field.link"))
             .addText((text) =>
                 text
-                    .setPlaceholder("https://...")
+                    .setPlaceholder("Https://...")
+
                     .setValue(this.task.link)
                     .onChange(async (v) => {
                         await this.taskManager.update(this.task, {
@@ -319,11 +327,14 @@ export class TaskDetailView {
                 text: " ×",
                 cls: "atm-tag-remove-btn"
             });
-            removeBtn.addEventListener("click", async () => {
-                const newTags = this.task.tags.filter((t) => t !== tag);
-                await this.taskManager.update(this.task, { tags: newTags });
-                this.render();
+            removeBtn.addEventListener("click", () => {
+                void (async () => {
+                    const newTags = this.task.tags.filter((t) => t !== tag);
+                    await this.taskManager.update(this.task, { tags: newTags });
+                    this.render();
+                })();
             });
+
         }
 
         // Neuer Tag hinzufügen
@@ -334,7 +345,8 @@ export class TaskDetailView {
             type: "text",
             placeholder: "Neuer Tag...",
             cls: "atm-tag-input"
-        }) as HTMLInputElement;
+        });
+
 
         const suggestionsDiv = inputWrapper.createDiv({
             cls: "atm-tag-suggestions"
@@ -354,24 +366,30 @@ export class TaskDetailView {
                     text: sug,
                     cls: "atm-tag-suggestion-item"
                 });
-                item.addEventListener("click", async () => {
-                    const newTags = [...this.task.tags, sug];
-                    await this.taskManager.update(this.task, {
-                        tags: newTags
-                    });
-                    this.render();
+                item.addEventListener("click", () => {
+                    void (async () => {
+                        const newTags = [...this.task.tags, sug];
+                        await this.taskManager.update(this.task, {
+                            tags: newTags
+                        });
+                        this.render();
+                    })();
                 });
+
             }
         });
 
-        tagInput.addEventListener("keydown", async (e) => {
+        tagInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && tagInput.value.trim()) {
                 e.preventDefault();
-                const newTags = [...this.task.tags, tagInput.value.trim()];
-                await this.taskManager.update(this.task, { tags: newTags });
-                this.render();
+                void (async () => {
+                    const newTags = [...this.task.tags, tagInput.value.trim()];
+                    await this.taskManager.update(this.task, { tags: newTags });
+                    this.render();
+                })();
             }
         });
+
     }
 
     // ---- Wiederkehrend-Bereich ----
@@ -425,15 +443,16 @@ export class TaskDetailView {
                     text.setValue(
                         String(this.task.wiederkehrend.wert || 1)
                     );
-                    text.onChange(async (v) => {
+                    text.onChange((v) => {
                         const wert = parseInt(v) || 1;
-                        await this.taskManager.update(this.task, {
+                        void this.taskManager.update(this.task, {
                             wiederkehrend: {
                                 ...this.task.wiederkehrend,
                                 wert: wert
                             }
                         });
                     });
+
                 });
         }
     }
@@ -540,8 +559,9 @@ export class TaskDetailView {
                 img.addEventListener("click", () => {
                     const file = this.app.vault.getAbstractFileByPath(imagePath);
                     if (file) {
-                        this.app.workspace.openLinkText(imagePath, "", true);
+                        void this.app.workspace.openLinkText(imagePath, "", true);
                     }
+
                 });
             } else {
                 imgWrapper.createEl("span", {
@@ -555,15 +575,18 @@ export class TaskDetailView {
                 text: t("detail.image.remove"),
                 cls: "atm-btn-image-remove"
             });
-            removeBtn.addEventListener("click", async () => {
-                const newBilder = this.task.bilder.filter(
-                    (b) => b !== imagePath
-                );
-                await this.taskManager.update(this.task, {
-                    bilder: newBilder
-                });
-                this.render();
+            removeBtn.addEventListener("click", () => {
+                void (async () => {
+                    const newBilder = this.task.bilder.filter(
+                        (b) => b !== imagePath
+                    );
+                    await this.taskManager.update(this.task, {
+                        bilder: newBilder
+                    });
+                    this.render();
+                })();
             });
+
         }
 
         // Upload-Button
@@ -577,28 +600,31 @@ export class TaskDetailView {
             fileInput.accept = "image/*";
             fileInput.multiple = true;
 
-            fileInput.addEventListener("change", async () => {
-                if (!fileInput.files) return;
+            fileInput.addEventListener("change", () => {
+                void (async () => {
+                    if (!fileInput.files) return;
 
-                const newBilder = [...this.task.bilder];
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    const file = fileInput.files[i];
-                    try {
-                        const savedPath = await this.imageStorage.saveImage(
-                            file,
-                            this.task.aufgabe
-                        );
-                        newBilder.push(savedPath);
-                    } catch (e) {
-                        console.error("Error uploading image:", e);
+                    const newBilder = [...this.task.bilder];
+                    for (let i = 0; i < fileInput.files.length; i++) {
+                        const file = fileInput.files[i];
+                        try {
+                            const savedPath = await this.imageStorage.saveImage(
+                                file,
+                                this.task.aufgabe
+                            );
+                            newBilder.push(savedPath);
+                        } catch (e) {
+                            console.error("Error uploading image:", e);
+                        }
                     }
-                }
 
-                await this.taskManager.update(this.task, {
-                    bilder: newBilder
-                });
-                this.render();
+                    await this.taskManager.update(this.task, {
+                        bilder: newBilder
+                    });
+                    this.render();
+                })();
             });
+
 
             fileInput.click();
         });

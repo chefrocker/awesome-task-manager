@@ -6,9 +6,9 @@
 import {
     TaskModel,
     RecurrenceInterval,
-    Status,
-    createDefaultTask
+    Status
 } from "./TaskModel";
+
 import { TaskManager } from "./TaskManager";
 
 export class RecurrenceEngine {

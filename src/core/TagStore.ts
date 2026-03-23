@@ -21,10 +21,11 @@ export class TagStore {
                 const data = JSON.parse(content);
                 this.tags = Array.isArray(data.tags) ? data.tags : [];
             }
-        } catch (e) {
-            console.log("TagStore: No existing tags found, starting fresh.");
+        } catch {
+            console.debug("TagStore: No existing tags found, starting fresh.");
             this.tags = [];
         }
+
     }
 
     async save(): Promise<void> {
@@ -62,7 +63,8 @@ export class TagStore {
             this.tags.sort((a, b) =>
                 a.toLowerCase().localeCompare(b.toLowerCase())
             );
-            this.save();
+            void this.save();
+
         }
     }
 
@@ -70,7 +72,8 @@ export class TagStore {
         const index = this.tags.indexOf(tag);
         if (index !== -1) {
             this.tags.splice(index, 1);
-            this.save();
+            void this.save();
+
         }
     }
 
@@ -81,7 +84,8 @@ export class TagStore {
             this.tags.sort((a, b) =>
                 a.toLowerCase().localeCompare(b.toLowerCase())
             );
-            this.save();
+            void this.save();
+
         }
     }
 
