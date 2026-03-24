@@ -106,7 +106,7 @@ export class FileStorage {
         }
 
         if (!data || typeof data !== "object" || !("aufgabe" in data)) return null;
-        const taskData = data as Record<string, unknown>;
+        const taskData = data;
 
 
         // Notizen aus dem Body extrahieren (nach dem Frontmatter)
@@ -284,7 +284,7 @@ export class FileStorage {
             } else if (typeof value === "string") {
                 result += `${prefix}${key}: "${value.replace(/"/g, '\\"')}"\n`;
             } else {
-                result += `${prefix}${key}: ${value}\n`;
+                result += `${prefix}${key}: ${String(value)}\n`;
             }
         }
         return result;
