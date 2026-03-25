@@ -1,7 +1,8 @@
 {
     "id": "awesome-task-manager",
     "name": "Awesome Task Manager",
-    "version": "1.0.3",
+    "version": "1.0.4",
+
 
     "minAppVersion": "1.0.0",
     "description": "A full-featured visual task manager with dashboard, inline editing, tags, images, recurring tasks, reminders, and Excel export.",

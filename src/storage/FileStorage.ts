@@ -278,14 +278,17 @@ export class FileStorage {
                         result += `${prefix}  - ${JSON.stringify(item)}\n`;
                     }
                 }
+            } else if (value instanceof Date) {
+                result += `${prefix}${key}: ${value.toISOString()}\n`;
             } else if (typeof value === "object") {
                 result += `${prefix}${key}:\n`;
                 result += this.manualStringify(value as Record<string, unknown>, indent + 1);
             } else if (typeof value === "string") {
                 result += `${prefix}${key}: "${value.replace(/"/g, '\\"')}"\n`;
             } else {
-                result += `${prefix}${key}: ${String(value)}\n`;
+                result += `${prefix}${key}: ${JSON.stringify(value)}\n`;
             }
+
         }
         return result;
     }

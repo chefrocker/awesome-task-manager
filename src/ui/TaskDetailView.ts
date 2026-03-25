@@ -259,8 +259,9 @@ export class TaskDetailView {
             .setName(t("task.field.link"))
             .addText((text) =>
                 text
-                    // eslint-disable-next-line obsidian/use-sentence-case
+                    // eslint-disable-next-line obsidian/use-sentence-case -- Placeholder for URL
                     .setPlaceholder("https://...")
+
 
                     .setValue(this.task.link)
                     .onChange(async (v) => {

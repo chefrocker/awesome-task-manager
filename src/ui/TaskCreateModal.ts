@@ -115,8 +115,9 @@ export class TaskCreateModal extends Modal {
         // Tags
         new Setting(contentEl).setName(t("task.field.tags")).addText(
             (text) => {
-                // eslint-disable-next-line obsidian/use-sentence-case
+                // eslint-disable-next-line obsidian/use-sentence-case -- Placeholder showing multiple entries
                 text.setPlaceholder("tag1, tag2, ...");
+
                 text.onChange((v) => {
                     this.formData.tags = v
                         .split(",")
@@ -161,8 +162,9 @@ export class TaskCreateModal extends Modal {
         new Setting(contentEl)
             .setName(t("task.field.link"))
             .addText((text) => {
-                // eslint-disable-next-line obsidian/use-sentence-case
+                // eslint-disable-next-line obsidian/use-sentence-case -- Placeholder for URL
                 text.setPlaceholder("https://...");
+
                 text.onChange((v) => {
                     this.formData.link = v;
                 });

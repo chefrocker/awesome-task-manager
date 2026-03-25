@@ -125,10 +125,11 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
             .setName(t("settings.dateFormat"))
             .setDesc(t("settings.dateFormat.desc"))
             .addDropdown((dropdown) => {
-                // eslint-disable-next-line obsidian/use-sentence-case
+                // eslint-disable-next-line obsidian/use-sentence-case -- Date format string
                 dropdown.addOption("dd.MM.yyyy", "dd.MM.yyyy (23.03.2026)");
-                // eslint-disable-next-line obsidian/use-sentence-case
+                // eslint-disable-next-line obsidian/use-sentence-case -- Date format string
                 dropdown.addOption("yyyy-MM-dd", "yyyy-mm-dd (2026-03-23)");
+
                 dropdown.setValue(this.settings.dateFormat);
                 dropdown.onChange(async (value) => {
                     this.settings.dateFormat = value as "dd.MM.yyyy" | "yyyy-MM-dd";
