@@ -74,3 +74,86 @@ Folgende Korrekturen wurden am Plugin vorgenommen, um den Review-Anforderungen z
 - **DashboardView.ts:** Der unbenutzte Import `TaskTableCallbacks` wurde entfernt.
 
 Alle Probleme aus dem automatisierten Scan sind damit behoben.
+
+---
+
+## 📝 Update PR #11303 Review (28.03.2026) – Sentence Case & i18n Compliance
+
+Nach dem automatisierten Re-Scan des ObsidianReviewBot wurden weitere Anforderungen identifiziert:
+
+### 🎯 Korrekturen (Version 1.0.5)
+
+#### 1. UI-Texte: Sentence Case korrekt implementiert
+**Problem:** Placeholders und Dropdown-Options waren nicht im Sentence Case oder hatten eslint-disable Workarounds.
+
+**Lösung:**
+- Alle Placeholders mit `t()` Funktionen ersetzt (nicht hardcoded)
+- Datumsformat-Labels durch i18n-Keys (`settings.dateFormat.european`, `settings.dateFormat.iso`) ersetzt
+- ESLint-Disable Kommentare entfernt (der Bot scannt Quellcode, nicht eslint Output)
+
+**Betroffene Dateien:**
+- `src/settings/SettingsTab.ts` (L127-128): Date Format Optionen
+- `src/ui/TaskCreateModal.ts` (L118, L165): Tag- und URL-Placeholders
+- `src/ui/TaskDetailView.ts` (L262): URL-Placeholder
+
+#### 2. Hardcoded Strings → i18n Migrations
+**Problem:** Deutsche Strings waren direkt im Code statt in Translations-Dateien.
+
+**Lösung:**
+- Neuen i18n-Schlüssel hinzugefügt: `task.placeholder.newTag`
+- Neuen i18n-Schlüssel hinzugefügt: `task.default.name`
+- `TaskDetailView.ts` (L348): `"Neuer Tag..."` → `t("task.placeholder.newTag")`
+- `TaskManager.ts` (L53): `"Neue Aufgabe"` → `t("task.default.name")`
+- Import hinzugefügt: `import { t } from "../i18n/i18n";`
+
+#### 3. i18n Locale-Dateien aktualisiert
+**Neue Keys in `en.json`:**
+```json
+{
+  "task.placeholder.tags": "Tag1, tag2, ...",
+  "task.placeholder.link": "Enter URL...",
+  "task.placeholder.newTag": "New tag...",
+  "task.default.name": "New task",
+  "settings.dateFormat.european": "European (dd.MM.yyyy)",
+  "settings.dateFormat.iso": "ISO (yyyy-MM-dd)"
+}
+```
+
+**Neue Keys in `de.json`:**
+```json
+{
+  "task.placeholder.tags": "Tag1, Tag2, ...",
+  "task.placeholder.link": "URL eingeben...",
+  "task.placeholder.newTag": "Neuer Tag...",
+  "task.default.name": "Neue Aufgabe",
+  "settings.dateFormat.european": "Europäisch (TT.MM.JJJJ)",
+  "settings.dateFormat.iso": "ISO (JJJJ-MM-TT)"
+}
+```
+
+#### 4. Code-Cleanup
+- Überflüssige Doppel-Leerzeilen entfernt (DashboardView, TaskDetailView, TaskTable, SettingsTab, etc.)
+- Doppel-Leerzeilen in JSON-Config-Dateien entfernt
+- Version Bump: 1.0.4 → 1.0.5 (package.json, manifest.json, versions.json)
+
+### ✅ Lessons Learned: Sentence Case & i18n Best Practices
+
+**Wichtigste Erkenntnisse:**
+1. **Nie hardcoded UI-Strings schreiben** - Immer in i18n-Dateien definieren und mit `t()` nutzen
+2. **ESLint-Disable Kommentare helfen nicht** - Der Bot scannt Quellcode direkt, nicht eslint Output
+3. **Sentence Case überall** - Auch bei Placeholders, Date Formats und Dropdown-Options
+4. **Naming Convention für i18n Keys:**
+   - `domain.type.property` (z.B. `task.placeholder.tags`)
+   - Aussagekräftig und hierarchisch organisiert
+5. **Immer beide Locale-Dateien updaten** - en.json UND de.json müssen identische Keys haben
+
+### 📋 Checkliste für zukünftige Beiträge
+
+Vor jedem Push prüfen:
+- [ ] Keine hardcoded UI-Strings im Code
+- [ ] Alle User-facing Strings verwenden `t()` Funktion
+- [ ] Neue i18n Keys in BEIDEN Locale-Dateien (en.json + de.json)
+- [ ] Sentence Case für alle UI-Texte
+- [ ] Keine eslint-disable Kommentare für UI-Text-Probleme
+- [ ] `npm run build` erfolgreich (TypeScript + ESLint)
+- [ ] Versionsnummern aktualisiert bei Releases
