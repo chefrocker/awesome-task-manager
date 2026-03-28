@@ -18,6 +18,7 @@ import { FileStorage } from "../storage/FileStorage";
 import { ImageStorage } from "../storage/ImageStorage";
 import { TagStore } from "./TagStore";
 import { PluginSettings } from "../settings/SettingsModel";
+import { t } from "../i18n/i18n";
 
 export class TaskManager {
     tasks: TaskModel[] = [];
@@ -50,7 +51,7 @@ export class TaskManager {
         const task = createDefaultTask();
 
         // Pflichtfelder
-        task.aufgabe = data.aufgabe || "Neue Aufgabe";
+        task.aufgabe = data.aufgabe || t("task.default.name");
         task.bezeichnung = data.bezeichnung || "";
         task.prioritaet = data.prioritaet ?? settings.defaultPriority;
         task.prioritaet_nr = priorityToNumber(task.prioritaet);

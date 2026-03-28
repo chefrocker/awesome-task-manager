@@ -89,7 +89,6 @@ export class DailySummaryModal extends Modal {
                 cls: "atm-summary-task-title"
             });
 
-
             if (task.faelligkeitsdatum) {
                 item.createEl("span", {
                     text: ` – ${formatDate(

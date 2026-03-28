@@ -248,7 +248,6 @@ export class TaskTable {
             "--percent-color": getPercentColor(task.prozent)
         });
 
-
         const slider = wrapper.createEl("input", {
             type: "range",
             cls: "atm-percent-slider"
@@ -265,7 +264,6 @@ export class TaskTable {
                 "--percent-color": getPercentColor(val)
             });
         });
-
 
         slider.addEventListener("change", () => {
             void (async () => {

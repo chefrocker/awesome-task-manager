@@ -209,7 +209,6 @@ export class DashboardView extends ItemView {
         modal.open();
     }
 
-
     private openDetailView(task: TaskModel): void {
         this.isDetailView = true;
 
@@ -218,7 +217,6 @@ export class DashboardView extends ItemView {
         this.tabBarEl.addClass("atm-hidden");
         this.filterBarEl.addClass("atm-hidden");
         this.contentEl_main.empty();
-
 
         const detailView = new TaskDetailView(
             this.contentEl_main,

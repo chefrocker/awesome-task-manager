@@ -34,11 +34,9 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
         const { containerEl } = this;
         containerEl.empty();
 
-        
         new Setting(containerEl)
             .setName(t("settings.title"))
             .setHeading();
-
 
         // Aufgaben-Ordner
         new Setting(containerEl)
@@ -119,16 +117,13 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
                     })
             );
 
-
         // Datumsformat
         new Setting(containerEl)
             .setName(t("settings.dateFormat"))
             .setDesc(t("settings.dateFormat.desc"))
             .addDropdown((dropdown) => {
-                // eslint-disable-next-line obsidian/use-sentence-case -- Date format string
-                dropdown.addOption("dd.MM.yyyy", "dd.MM.yyyy (23.03.2026)");
-                // eslint-disable-next-line obsidian/use-sentence-case -- Date format string
-                dropdown.addOption("yyyy-MM-dd", "yyyy-mm-dd (2026-03-23)");
+                dropdown.addOption("dd.MM.yyyy", t("settings.dateFormat.european"));
+                dropdown.addOption("yyyy-MM-dd", t("settings.dateFormat.iso"));
 
                 dropdown.setValue(this.settings.dateFormat);
                 dropdown.onChange(async (value) => {
@@ -136,7 +131,6 @@ export class AwesomeTaskSettingsTab extends PluginSettingTab {
                     await this.saveSettings();
                 });
             });
-
 
         // Tägliche Zusammenfassung
         new Setting(containerEl)

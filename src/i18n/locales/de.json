@@ -83,5 +83,11 @@
     "summary.today": "Heute fällig",
     "summary.none": "Keine fälligen Aufgaben – alles erledigt! 🎉",
     "task.field.intervalValue": "Intervall-Wert (Tage/Wochen/Monate)",
-    "task.field.reminderMinutes": "Minuten vorher"
+    "task.field.reminderMinutes": "Minuten vorher",
+    "task.placeholder.tags": "Tag1, Tag2, ...",
+    "task.placeholder.link": "URL eingeben...",
+    "task.placeholder.newTag": "Neuer Tag...",
+    "task.default.name": "Neue Aufgabe",
+    "settings.dateFormat.european": "Europäisch (TT.MM.JJJJ)",
+    "settings.dateFormat.iso": "ISO (JJJJ-MM-TT)"
 }

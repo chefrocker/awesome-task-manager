@@ -83,5 +83,11 @@
     "summary.today": "Due today",
     "summary.none": "No tasks due – all clear! 🎉",
     "task.field.intervalValue": "Interval value (days/weeks/months)",
-    "task.field.reminderMinutes": "Minutes before"
+    "task.field.reminderMinutes": "Minutes before",
+    "task.placeholder.tags": "Tag1, tag2, ...",
+    "task.placeholder.link": "Enter URL...",
+    "task.placeholder.newTag": "New tag...",
+    "task.default.name": "New task",
+    "settings.dateFormat.european": "European (dd.MM.yyyy)",
+    "settings.dateFormat.iso": "ISO (yyyy-MM-dd)"
 }

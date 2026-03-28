@@ -65,7 +65,6 @@ export class TaskDetailView {
         this.container.empty();
         this.container.addClass("atm-detail-view");
 
-
         // ---- Header mit Zurück und Löschen ----
         const header = this.container.createDiv({ cls: "atm-detail-header" });
         const backBtn = header.createEl("button", {
@@ -84,7 +83,6 @@ export class TaskDetailView {
                 this.callbacks.onDeleted();
             })();
         });
-
 
         // ---- Formular ----
         const form = this.container.createDiv({ cls: "atm-detail-form" });
@@ -216,7 +214,6 @@ export class TaskDetailView {
             "--percent-color": getPercentColor(this.task.prozent)
         });
 
-
         percentSetting.addSlider((slider) =>
             slider
                 .setLimits(0, 100, 5)
@@ -228,7 +225,6 @@ export class TaskDetailView {
                         "--percent-color": getPercentColor(v)
                     });
                     percentDisplay.className = `atm-percent-label atm-percent-detail-value ${getPercentCssClass(v)}`;
-
 
                     const oldStatus = this.task.status;
                     await this.taskManager.update(this.task, {
@@ -259,10 +255,7 @@ export class TaskDetailView {
             .setName(t("task.field.link"))
             .addText((text) =>
                 text
-                    // eslint-disable-next-line obsidian/use-sentence-case -- Placeholder for URL
-                    .setPlaceholder("https://...")
-
-
+                    .setPlaceholder(t("task.placeholder.link"))
                     .setValue(this.task.link)
                     .onChange(async (v) => {
                         await this.taskManager.update(this.task, {
@@ -345,7 +338,7 @@ export class TaskDetailView {
         });
         const tagInput = inputWrapper.createEl("input", {
             type: "text",
-            placeholder: "Neuer Tag...",
+            placeholder: t("task.placeholder.newTag"),
             cls: "atm-tag-input"
         });
 
